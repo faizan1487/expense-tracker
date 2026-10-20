@@ -9,3 +9,5 @@ class Team(models.Model):
 
 class User(AbstractUser):
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
+    currency = models.CharField(max_length=10, null=True, blank=True)
+    budget = models.IntegerField(null=True, blank=True)

@@ -1,55 +1,34 @@
 class Solution:
-    def characterReplacement(self, s: str, k: int) -> int:
-        # window_length
-        # replacements
-        # k
+    def productExceptSelf(self, nums: list[int]) -> list[int]:
+        left_side_product = []
+        current_prod = 1
 
-        # replacements = window_length - most_repeating_char
+        for i in nums:
+            left_side_product.append(current_prod)
+            current_prod = i * current_prod
 
-        # replacements == k:
-        # valid window
+        print(left_side_product)
 
-        # replacements < k:
-        # valid window
+        right_side_product = []
+        current_prod = 1
 
-        # replacements > k:
-        # move both pointers of the window so that it becomes valid
+        for i in nums[::-1]:
+            right_side_product.append(current_prod)
+            current_prod = i * current_prod
 
-        left = 0
-        right = 1
-        best_len = 1
-        most_freq_element = {}
-        most_freq_element[s[left]] = 1
-
-        while right < len(s):
-            print("left", left)
-            print("right", right)
-            print("s left", s[left])
-            print("s right", s[right])
-            if s[right] in most_freq_element:
-                most_freq_element[s[right]] += 1
-            else:
-                most_freq_element[s[right]] = 1
-
-            window_length = (right - left) + 1
-            print("most_freq_element", most_freq_element)
-            print("most freq",  max(most_freq_element.values()))
-            replacements = window_length - max(most_freq_element.values())
-            print("replacements", replacements)
-            if replacements == k or replacements < k:
-                best_len = window_length
-                right += 1
-            else:
-                most_freq_element[s[left]] -= 1
-                left += 1
-                right += 1
+        result = []
+        
+        for index, i in enumerate(right_side_product[::-1]):
+            result.append(left_side_product[index] * i)
 
 
-        return best_len
+        result result
 
+        
+
+        
 
 
 sol = Solution()
-s = "AABABBA"
-k = 1
-print(sol.characterReplacement(s, k))
+nums = [1,2,3,4]
+print(sol.productExceptSelf(nums))
