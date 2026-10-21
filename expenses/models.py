@@ -18,3 +18,10 @@ class Expense(models.Model):
         default=Categories.FIXED_EXPENSE,
     )
     created_at = models.DateField()
+
+
+class Comment(models.Model):
+    comment = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    expense = models.ForeignKey(Expense, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateField()
