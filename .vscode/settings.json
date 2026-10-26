@@ -1,0 +1,8 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python.defaultInterpreterPath": "/Users/faizanahmed/.pyenv/versions/3.10.10/bin/python",
+    "python.analysis.extraPaths": [
+        "./",
+        "/Users/faizanahmed/.pyenv/versions/3.10.10/lib/python3.10/site-packages"
+    ]
+}
