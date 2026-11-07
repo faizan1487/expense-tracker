@@ -1,56 +1,58 @@
-class Solution:
-    def numIslands(self, grid):
-        # start with frist index if its 1 , counti t as land and conver all 1's connected to it to 0 using below function
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-        rows = len(grid)
-        columns = len(grid[0])
-        islands = 0
+# Builds:        0
+#              /   \
+#             2     4
+#            /     / \
+#           1     3   -1
+#          / \     \    \
+#         5   1     6    8
+root = TreeNode(0)
+root.left = TreeNode(2)
+root.right = TreeNode(4)
+root.left.left = TreeNode(1)
+root.right.left = TreeNode(3)
+root.right.right = TreeNode(-1)
+root.left.left.left = TreeNode(5)
+root.left.left.right = TreeNode(1)
+root.right.left.right = TreeNode(6)
+root.right.right.right = TreeNode(8)
 
-        for i, value in enumerate(grid):
-            for j, value in enumerate(grid[i]):
-                print("grid[i][j]", grid[i][j])
+class Solution(object):
+    def levelOrder(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: List[List[int]]
+        """
 
-                if grid[i][j] == "1":
-                    print("equal")
-                    islands = islands + 1
-                    seen = set()
-                    def fillColor(i, j):
-                        if grid[i][j] == "1":
-                            grid[i][j] = 0
+        # start a queue with the root
+        # 
 
-                        if j + 1 < columns and grid[i][j+1] == "1" and (i, j+1) not in seen:
-                            grid[i][j+1] = 0
-                            seen.add((i, j+1))
-                            fillColor(i, j+1)
+        from collections import deque
 
-                        if j - 1 >= 0 and grid[i][j-1] == "1" and (i, j-1) not in seen:
-                            grid[i][j-1] = 0
-                            seen.add((i, j-1))
-                            fillColor(i, j-1)
+        queue = deque()
 
-                        if i + 1 < rows and grid[i + 1][j] == "1" and (i + 1, j) not in seen:
-                            grid[i + 1][j] = 0
-                            seen.add((i + 1, j))
-                            fillColor(i + 1, j)
+        queue.append(root)
+        levels = []
+        while queue:
+            length = len(queue)
+            level = []
+            while length > 0:
+                node = queue.popleft()
+                if node:
+                    level.append(node.val)
+                    queue.append(node.left)
+                    queue.append(node.right)
+                length -= 1
+            if level:
+                levels.append(level)
 
-                        if i - 1 >= 0 and grid[i - 1][j] == "1" and (i - 1, j) not in seen:
-                            grid[i - 1][j] = 0
-                            seen.add((i - 1, j))
-                            fillColor(i - 1, j)
-            
-                    fillColor(i, j)
-
-        print("islands", islands)
-        return islands
-
+        return levels
 
 
 sol = Solution()
-grid = [
-  ["1","1","1","1","0"],
-  ["1","1","0","1","0"],
-  ["1","1","0","0","0"],
-  ["0","0","0","0","0"]
-]
-print(sol.numIslands(grid))
-
+print(sol.levelOrder(root))
