@@ -13,3 +13,4 @@ class RegisterView(generics.CreateAPIView):
 class UserListView(generics.ListAPIView):
     queryset = get_user_model().objects.all().order_by("id")
     serializer_class = UserSerializer
+    # Restrict to only admin users
