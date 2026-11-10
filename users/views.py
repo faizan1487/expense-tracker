@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from .serializers import RegisterSerializer, UserSerializer
+from .permissions import AdminPermission
 
 
 class RegisterView(generics.CreateAPIView):
@@ -14,3 +15,4 @@ class UserListView(generics.ListAPIView):
     queryset = get_user_model().objects.all().order_by("id")
     serializer_class = UserSerializer
     # Restrict to only admin users
+    permission_classes = [AdminPermission]

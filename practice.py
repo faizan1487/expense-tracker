@@ -1,58 +1,38 @@
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-# Builds:        0
-#              /   \
-#             2     4
-#            /     / \
-#           1     3   -1
-#          / \     \    \
-#         5   1     6    8
-root = TreeNode(0)
-root.left = TreeNode(2)
-root.right = TreeNode(4)
-root.left.left = TreeNode(1)
-root.right.left = TreeNode(3)
-root.right.right = TreeNode(-1)
-root.left.left.left = TreeNode(5)
-root.left.left.right = TreeNode(1)
-root.right.left.right = TreeNode(6)
-root.right.right.right = TreeNode(8)
-
 class Solution(object):
-    def levelOrder(self, root):
+    def subarraySum(self, nums, k):
         """
-        :type root: Optional[TreeNode]
-        :rtype: List[List[int]]
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
         """
+        # if i minus each element from k
+        # i will know what to add in each element to make it equal to k
+        # i will need to remember if i saw that sum before
+        previous_sums = {}
+        previous_sums[0] = 1
+        subarray_count = 0
+        running_sum = 0
+        for i in nums:
+            running_sum += i
+            print("running_sum", running_sum)
+            remaining_sum = running_sum - k
+            print("remaining_sum", remaining_sum)
+            print("previous_sums", previous_sums)
+            if remaining_sum in previous_sums:
+                subarray_count += previous_sums[remaining_sum]
+                previous_sums[remaining_sum] += 1
 
-        # start a queue with the root
-        # 
+            if running_sum in previous_sums:
+                previous_sums[running_sum] += 1
+            else:
+                previous_sums[running_sum] = 1
+            print("previous_sums", previous_sums)
+            print("-------")
 
-        from collections import deque
-
-        queue = deque()
-
-        queue.append(root)
-        levels = []
-        while queue:
-            length = len(queue)
-            level = []
-            while length > 0:
-                node = queue.popleft()
-                if node:
-                    level.append(node.val)
-                    queue.append(node.left)
-                    queue.append(node.right)
-                length -= 1
-            if level:
-                levels.append(level)
-
-        return levels
+        return subarray_count
 
 
 sol = Solution()
-print(sol.levelOrder(root))
+nums = [1,2,3]
+k = 3
+print(sol.subarraySum(nums, k))
