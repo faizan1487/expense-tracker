@@ -19,4 +19,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['password', 'is_superuser', 'is_staff']
+        fields = ["id", "email", "first_name", "last_name", "team", 
+                  "currency", "budget", "is_active", "groups", 
+                  "date_joined"]
+        read_only_fields = ["id", "email", "date_joined"]

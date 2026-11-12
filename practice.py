@@ -1,38 +1,72 @@
+from collections import deque
+
+class TreeNode(object):
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def build_tree(values):
+    if not values or values[0] is None:
+        return None
+    root = TreeNode(values[0])
+    queue = deque([root])
+    i = 1
+    while queue and i < len(values):
+        node = queue.popleft()
+        if i < len(values) and values[i] is not None:
+            node.left = TreeNode(values[i])
+            queue.append(node.left)
+        i += 1
+        if i < len(values) and values[i] is not None:
+            node.right = TreeNode(values[i])
+            queue.append(node.right)
+        i += 1
+    return root
+
+root = build_tree([3, 9, 20, None, None, 15, 7])
+
+
+
 class Solution(object):
-    def subarraySum(self, nums, k):
+    def levelOrder(self, root):
         """
-        :type nums: List[int]
-        :type k: int
-        :rtype: int
+        :type root: Optional[TreeNode]
+        :rtype: List[List[int]]
         """
-        # if i minus each element from k
-        # i will know what to add in each element to make it equal to k
-        # i will need to remember if i saw that sum before
-        previous_sums = {}
-        previous_sums[0] = 1
-        subarray_count = 0
-        running_sum = 0
-        for i in nums:
-            running_sum += i
-            print("running_sum", running_sum)
-            remaining_sum = running_sum - k
-            print("remaining_sum", remaining_sum)
-            print("previous_sums", previous_sums)
-            if remaining_sum in previous_sums:
-                subarray_count += previous_sums[remaining_sum]
-                previous_sums[remaining_sum] += 1
+        if root is None:
+            return []
+        from collections import deque
+        q = deque()
+        q.append(root)
+        levels = []
+        alternate = True
+        while q:
+            len_q = len(q)
+            level = []
+            while len_q > 0:
+                node = q.popleft()
+                len_q -= 1
+                if alternate:
+                    if node:
+                        level.append(node.val)
+                    if node.right:
+                        q.append(node.right)
+                    if node.left:
+                        q.append(node.left)
+                    alternate = False
+                else:
+                    if node:
+                        level.append(node.val)
+                    if node.left:
+                        q.append(node.left)
+                    if node.right:
+                        q.append(node.right)
+                    alternate = True
+            levels.append(level)
 
-            if running_sum in previous_sums:
-                previous_sums[running_sum] += 1
-            else:
-                previous_sums[running_sum] = 1
-            print("previous_sums", previous_sums)
-            print("-------")
-
-        return subarray_count
+        return levels
 
 
 sol = Solution()
-nums = [1,2,3]
-k = 3
-print(sol.subarraySum(nums, k))
+print(sol.levelOrder(root))
