@@ -11,4 +11,4 @@ class AdminPermission(BasePermission):
         return user.groups.filter(name__in=ROLES).exists()
 
     def has_permission(self, request, view):
-        return self.in_group(request.user)
+        return self.in_group(request.user) or request.user.is_superuser
