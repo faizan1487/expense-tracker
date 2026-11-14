@@ -1,72 +1,66 @@
-from collections import deque
-
-class TreeNode(object):
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-def build_tree(values):
-    if not values or values[0] is None:
-        return None
-    root = TreeNode(values[0])
-    queue = deque([root])
-    i = 1
-    while queue and i < len(values):
-        node = queue.popleft()
-        if i < len(values) and values[i] is not None:
-            node.left = TreeNode(values[i])
-            queue.append(node.left)
-        i += 1
-        if i < len(values) and values[i] is not None:
-            node.right = TreeNode(values[i])
-            queue.append(node.right)
-        i += 1
-    return root
-
-root = build_tree([3, 9, 20, None, None, 15, 7])
-
-
-
 class Solution(object):
-    def levelOrder(self, root):
+    def canFinish(self, numCourses, prerequisites):
         """
-        :type root: Optional[TreeNode]
-        :rtype: List[List[int]]
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
         """
-        if root is None:
-            return []
-        from collections import deque
-        q = deque()
-        q.append(root)
-        levels = []
-        alternate = True
-        while q:
-            len_q = len(q)
-            level = []
-            while len_q > 0:
-                node = q.popleft()
-                len_q -= 1
-                if alternate:
-                    if node:
-                        level.append(node.val)
-                    if node.right:
-                        q.append(node.right)
-                    if node.left:
-                        q.append(node.left)
-                    alternate = False
+        len_pre = len(prerequisites) * 2
+
+        if len_pre == 0:
+            return True
+
+        pre_pre_req = {}
+        course_nums = set()
+
+        for i in prerequisites:
+            if i[0] == i[1]:
+                return False
+            print("i", i)
+            # [[1,0],[0,2],[2,1]]
+            course_nums.add(i[0])
+            course_nums.add(i[1])
+            print("pre_pre_req", pre_pre_req)
+            print("i[0]", i[0])
+            if i[0] in pre_pre_req:
+                print("in pre pre req")
+                print("pre_pre_req[i[0]]", pre_pre_req[i[0]][0])
+                prev_req = pre_pre_req[i[0]][0]
+                if i[1] in pre_pre_req[i[0]]:
+                    return False
+                elif prev_req in pre_pre_req:
+                    if i[1] in pre_pre_req[prev_req]:
+                        return False
                 else:
-                    if node:
-                        level.append(node.val)
-                    if node.left:
-                        q.append(node.left)
-                    if node.right:
-                        q.append(node.right)
-                    alternate = True
-            levels.append(level)
+                    if i[1] in pre_pre_req:
+                        pre_pre_req[i[1]].append(pre_pre_req[i[0]])
+                    else:
+                        include_prev_req = list(pre_pre_req[i[0]])
+                        print(" before include pre_pre_req", pre_pre_req)
+                        include_prev_req.append(i[0])
+                        print("pre_pre_req", pre_pre_req)
+                        print("include_prev_req", include_prev_req)
+                        pre_pre_req[i[1]] = include_prev_req
+                        print("pre_pre_req", pre_pre_req)
+            elif i[1] in pre_pre_req:
+                print("elif 1")
+                pre_pre_req[i[1]].append(i[0])
+            else:
+                pre_pre_req[i[1]] = [i[0]]
 
-        return levels
+            print("pre_pre_req", pre_pre_req)
+            print("---------------")
 
+        print("len")
+        print(course_nums)
+
+        largest = max(course_nums)
+        if largest < numCourses:
+            return True
+
+        return False
 
 sol = Solution()
-print(sol.levelOrder(root))
+numCourses = 4
+prerequisites = [[3,1],[0,3],[1,2],[2,0]]
+print("result", sol.canFinish(numCourses, prerequisites))
