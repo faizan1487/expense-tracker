@@ -8,6 +8,8 @@ from rest_framework_simplejwt.views import (
     TokenBlacklistView
 )
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,4 +17,9 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("api/logout/", TokenBlacklistView.as_view(), name="logout"),
     path("api/user/", include("users.urls")),
+
+    # Spectacular swagger schema
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
