@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator
+from djmoney.models.fields import MoneyField
 
 
 class Team(models.Model):
@@ -30,9 +31,8 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
-    currency = models.CharField(max_length=10, blank=True, default="")
-    budget = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True,
-                                 validators=[MinValueValidator(0)])
+    budget = MoneyField(max_digits=5, decimal_places=2, default_currency=None,
+                        validators=[MinValueValidator(0)], null=True)
 
     USERNAME_FIELD = "email"
 
